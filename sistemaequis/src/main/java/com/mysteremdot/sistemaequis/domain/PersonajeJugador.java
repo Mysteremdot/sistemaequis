@@ -21,6 +21,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrimaryKeyJoinColumn;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,7 +42,7 @@ public class PersonajeJugador {
 	private UUID id;
 
 	@Convert(converter = EspecieNombreConverter.class)
-    @Column(length = 12, unique = true, nullable = false, updatable = false)
+    @Column(length = 12, nullable = false, updatable = false)
 	private Especie especie;
 
 	@ManyToMany
@@ -51,8 +53,8 @@ public class PersonajeJugador {
     @JoinColumn(name = "personaje_id")
 	private List<Etiqueta> etiquetas;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "personaje_id")
-	private List<Competencia> competencias;
+	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @PrimaryKeyJoinColumn // Usar la misma clave primaria para ambas entidades
+	private Competencia competencia;
 
 }
