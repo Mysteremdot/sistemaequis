@@ -15,7 +15,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Rasgo {
+public class EtiquetaTemporal {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

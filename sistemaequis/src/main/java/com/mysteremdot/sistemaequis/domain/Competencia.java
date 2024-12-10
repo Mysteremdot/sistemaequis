@@ -5,7 +5,6 @@ import java.util.UUID;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import com.mysteremdot.sistemaequis.enumerations.EspecieNombreConverter;
 import com.mysteremdot.sistemaequis.enumerations.NivelCompetencia;
 import com.mysteremdot.sistemaequis.enumerations.NivelCompetenciaNombreConverter;
 

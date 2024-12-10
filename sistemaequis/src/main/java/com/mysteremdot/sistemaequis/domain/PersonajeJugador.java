@@ -6,6 +6,8 @@ import java.util.UUID;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import com.mysteremdot.sistemaequis.enumerations.Casta;
+import com.mysteremdot.sistemaequis.enumerations.CastaNombreConverter;
 import com.mysteremdot.sistemaequis.enumerations.Especie;
 import com.mysteremdot.sistemaequis.enumerations.EspecieNombreConverter;
 
@@ -13,14 +15,12 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrimaryKeyJoinColumn;
 import lombok.AllArgsConstructor;
@@ -44,14 +44,30 @@ public class PersonajeJugador {
 	@Convert(converter = EspecieNombreConverter.class)
     @Column(length = 12, nullable = false, updatable = false)
 	private Especie especie;
+	
+	@Convert(converter = CastaNombreConverter.class)
+    @Column(length = 12, nullable = false, updatable = false)
+	private Casta casta;
 
 	@ManyToMany
     @JoinTable(name = "personaje_rasgo", joinColumns = @JoinColumn(name = "personaje_id"), inverseJoinColumns = @JoinColumn(name = "rasgo_id"))
 	private List<Rasgo> rasgos;
-
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "personaje_id")
-	private List<Etiqueta> etiquetas;
+	
+	@ManyToMany
+    @JoinTable(name = "personaje_etiqueta_de_especie", joinColumns = @JoinColumn(name = "personaje_id"), inverseJoinColumns = @JoinColumn(name = "etiqueta_id"))
+	private List<EtiquetaDeEspecie> etiquetasDeEspecie;
+	
+	@ManyToMany
+    @JoinTable(name = "personaje_merito", joinColumns = @JoinColumn(name = "personaje_id"), inverseJoinColumns = @JoinColumn(name = "merito_id"))
+	private List<Merito> meritos;
+	
+	@ManyToMany
+    @JoinTable(name = "personaje_lacra", joinColumns = @JoinColumn(name = "personaje_id"), inverseJoinColumns = @JoinColumn(name = "lacra_id"))
+	private List<Lacra> lacras;
+	
+	@ManyToMany
+    @JoinTable(name = "personaje_etiqueta_temporal", joinColumns = @JoinColumn(name = "personaje_id"), inverseJoinColumns = @JoinColumn(name = "etiqueta_id"))
+	private List<EtiquetaTemporal> etiquetasTemporales;
 
 	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @PrimaryKeyJoinColumn // Usar la misma clave primaria para ambas entidades
