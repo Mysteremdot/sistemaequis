@@ -21,8 +21,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.PrimaryKeyJoinColumn;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -69,8 +68,7 @@ public class PersonajeJugador {
     @JoinTable(name = "personaje_etiqueta_temporal", joinColumns = @JoinColumn(name = "personaje_id"), inverseJoinColumns = @JoinColumn(name = "etiqueta_id"))
 	private List<EtiquetaTemporal> etiquetasTemporales;
 
-	@OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
-    @PrimaryKeyJoinColumn // Usar la misma clave primaria para ambas entidades
-	private Competencia competencia;
+	@OneToMany(mappedBy = "personaje", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PersonajeCompetencia> competencias;
 
 }

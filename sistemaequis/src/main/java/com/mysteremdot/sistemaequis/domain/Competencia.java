@@ -1,17 +1,20 @@
 package com.mysteremdot.sistemaequis.domain;
 
-import java.util.UUID;
+import java.util.List;
 
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import com.mysteremdot.sistemaequis.enumerations.TipoCompetencia;
+import com.mysteremdot.sistemaequis.enumerations.TipoCompetenciaNombreConverter;
 
-import com.mysteremdot.sistemaequis.enumerations.NivelCompetencia;
-import com.mysteremdot.sistemaequis.enumerations.NivelCompetenciaNombreConverter;
-
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,64 +28,29 @@ import lombok.Setter;
 public class Competencia {
 	
 	@Id
-	@JdbcTypeCode(value = SqlTypes.CHAR)
-    @Column(columnDefinition = "varchar", length = 36, nullable = false, updatable = false)
-    private UUID id; // Clave primaria compartida con PersonajeJugador
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(nullable = false, updatable = false)
+	private Integer id;
+	
+	@Column(length = 20, unique = true, nullable = false, updatable = false)
+	private String nombre;
+	
+	@Convert(converter = TipoCompetenciaNombreConverter.class)
+    @Column(length = 12, nullable = false)
+    private TipoCompetencia tipo;
+	
+	// INICIO Relación jerárquica de la misma entidad.
+	
+	@ManyToOne
+	@JoinColumn(name = "especializacion_de_id")
+	private Competencia especializacionDe;
+	
+	@OneToMany(mappedBy = "especializacionDe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Competencia> especializaciones;
+	
+	// FIN Relación jerárquica de la misma entidad.
+	
+	@OneToMany(mappedBy = "competencia", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PersonajeCompetencia> personajes;
 
-    //	////////////////////////////////////////
-	//	////////// COMPETENCIAS COMUNES
-	//	////////////////////////////////////////
-	
-	@Convert(converter = NivelCompetenciaNombreConverter.class)
-    @Column(length = 12, nullable = false)
-    private NivelCompetencia AGIlidad;
-	
-	@Convert(converter = NivelCompetenciaNombreConverter.class)
-    @Column(length = 12, nullable = false)
-    private NivelCompetencia ATLletismo;
-	
-    @Convert(converter = NivelCompetenciaNombreConverter.class)
-    @Column(length = 12, nullable = false)
-    private NivelCompetencia AURa;
-    
-    @Convert(converter = NivelCompetenciaNombreConverter.class)
-    @Column(length = 12, nullable = false)
-    private NivelCompetencia AUTocontrol;
-    
-    @Convert(converter = NivelCompetenciaNombreConverter.class)
-    @Column(length = 12, nullable = false)
-    private NivelCompetencia CONviccion;
-    
-    @Convert(converter = NivelCompetenciaNombreConverter.class)
-    @Column(length = 12, nullable = false)
-    private NivelCompetencia COOrdinacion;
-    
-    @Convert(converter = NivelCompetenciaNombreConverter.class)
-    @Column(length = 12, nullable = false)
-    private NivelCompetencia EIDos;
-    
-    @Convert(converter = NivelCompetenciaNombreConverter.class)
-    @Column(length = 12, nullable = false)
-    private NivelCompetencia EMPatia;
-    
-    @Convert(converter = NivelCompetenciaNombreConverter.class)
-    @Column(length = 12, nullable = false)
-    private NivelCompetencia FORtaleza;
-    
-    @Convert(converter = NivelCompetenciaNombreConverter.class)
-    @Column(length = 12, nullable = false)
-    private NivelCompetencia FUErza;
-    
-    @Convert(converter = NivelCompetenciaNombreConverter.class)
-    @Column(length = 12, nullable = false)
-    private NivelCompetencia INTelecto;
-    
-    @Convert(converter = NivelCompetenciaNombreConverter.class)
-    @Column(length = 12, nullable = false)
-    private NivelCompetencia PERspicacia;
-    
-    //	////////////////////////////////////////
-	//	////////// COMPETENCIAS AVANZADAS
-	//	////////////////////////////////////////
-    
 }
